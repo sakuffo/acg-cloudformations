@@ -1,0 +1,29 @@
+Mappings:
+    RegionMap:
+        us-east-1:
+            AMI: ami-0c94855ba95c71c99
+        us-west-2:
+            AMI: ami-0841edc20334f9287
+Resources:
+    Ec2Instance:
+        Type: "AWS::EC2::Instance"
+        Properties:
+            InstanceType: t2.micro
+            ImageId: ami-0c94855ba95c71c99
+            Tags:
+                - Key: "Name"
+                  Value: !Join
+                      - ""
+                      - - "EC2 Instance for "
+                        - !Ref AWS::Region
+            SecurityGroups:
+                - !Ref MySecurityGroup
+    MySecurityGroup:
+        Type: "AWS::EC2::SecurityGroup"
+        Properties:
+            GroupDescription: Enable SSH access
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: "22"
+                  ToPort: "22"
+                  CidrIp: 0.0.0.0/0
