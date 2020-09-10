@@ -1,3 +1,10 @@
+Parameters:
+  NameOfService:
+    Description: "The name of the service this stack is to be used for."
+    Type: String
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access into the server
+    Type: AWS::EC2::KeyPair::KeyName
 Mappings:
     RegionMap:
         us-east-1:
@@ -16,10 +23,8 @@ Resources:
                 - AMI
             Tags:
                 - Key: "Name"
-                  Value: !Join
-                      - ""
-                      - - "EC2 Instance for "
-                        - !Ref AWS::Region
+                  Value: !Ref NameOfService
+            KeyName: !Ref KeyName
             SecurityGroups:
                 - !Ref MySecurityGroup
     MySecurityGroup:
@@ -31,3 +36,8 @@ Resources:
                   FromPort: "22"
                   ToPort: "22"
                   CidrIp: 0.0.0.0/0
+Outputs:
+  ServerDns:
+    Value: !GetAtt
+      - Ec2Instance
+      - PublicDnsName
