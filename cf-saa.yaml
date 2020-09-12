@@ -21,20 +21,19 @@ Resources:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Scheme: internal
       SecurityGroups:
         - !Ref ALBSecurityGroup
       Subnets: !Ref SubnetIds
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
       DefaultActions:
         - Type: forward
           TargetGroupArn: 
             Ref: TargetGroup
-      LoadBalancerArn: !Ref LoadBalancer
-      Port: 80
-      Protocol: HTTP
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -52,19 +51,19 @@ Resources:
         - !Ref TargetGroup
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
-    Metadata:
+    Metadata: 
       Comment: Install php and httpd
       AWS::CloudFormation::Init:
-        config:
-          packages:
+        config: 
+          packages: 
             yum:
               httpd: []
               php: []
-          files:
+          files: 
             /var/www/html/index.php:
               content: !Sub |
                 <?php print "Hello world ${MyName} was here!"; ?>
-          services:
+          services: 
             sysvinit:
               httpd:
                 enabled: true
